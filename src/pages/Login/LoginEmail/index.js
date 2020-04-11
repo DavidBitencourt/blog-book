@@ -33,7 +33,7 @@ export default function LoginEmail() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("LoginPassword");
+            navigation.navigate("LoginPassword", { email });
           }}
         />
       </BoxButtonsStyled>

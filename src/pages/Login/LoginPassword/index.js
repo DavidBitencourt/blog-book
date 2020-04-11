@@ -1,5 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Alert, AsyncStorage } from "react-native";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
 import InputStyled from "../../../components/InputStyled";
@@ -12,41 +13,40 @@ import {
 
 export default function LoginPassword() {
   const navigation = useNavigation();
+  const [users, setUsers] = useState([]);
   const [password, setPassword] = useState("");
+  const route = useRoute();
+  const email = route.params.email;
 
-  //   async function getUsers() {
-  //     let registers = await AsyncStorage.getItem("registers");
-  //     registers = JSON.parse(registers);
-  //     setUsers(registers);
-  //   }
+  async function getUsers() {
+    let usersStorage = await AsyncStorage.getItem("users");
+    usersStorage = JSON.parse(usersStorage);
+    setUsers(usersStorage);
+  }
 
-  //   useEffect(() => {
-  //     setEmail("");
-  //     setPassword("");
-  //     getUsers();
-  //     // AsyncStorage.clear();
-  //   }, []);
+  useEffect(() => {
+    setPassword("");
+    getUsers();
+  }, []);
 
-  //   useEffect(() => {
-  //     console.log(users, "users");
-  //   }, [users]);
+  async function login() {
+    if (users) {
+      let user = await users.find((user) => {
+        return user.email === email && user.password === password;
+      });
+      if (user) {
+        navigation.navigate("ListPost", { user });
+      } else {
+        Alert.alert("Usuário inválido, verifique os dados e tente novamente.");
+        navigation.navigate("Home");
+      }
+    } else {
+      Alert.alert("Para começar, faça o seu cadastro!");
+      navigation.navigate("Home");
+    }
+  }
 
-  //   async function login() {
-  //     if (users) {
-  //       users.map((user) => {
-  //         if (user.email === email && user.password === password) {
-  //           navigation.navigate("ListPost", { user });
-  //         } else {
-  //           alert("Usuário inválido");
-  //         }
-  //       });
-  //     } else {
-  //       await alert("Para fazer login faça o seu cadastro");
-  //       navigation.navigate("Register");
-  //     }
-  //   }
-
-  const loginEmailContent = (
+  const loginPasswordContent = (
     <BoxConteinerStyled>
       <TextStyled>
         Agora, insira{" "}
@@ -57,6 +57,7 @@ export default function LoginPassword() {
           label="senha"
           value={password}
           handler={(text) => setPassword(text)}
+          secureTextEntry
         />
       </BoxInputStyled>
       <BoxButtonsStyled>
@@ -65,12 +66,12 @@ export default function LoginPassword() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("ListPost");
+            login();
           }}
         />
       </BoxButtonsStyled>
     </BoxConteinerStyled>
   );
 
-  return <Container container={loginEmailContent} />;
+  return <Container container={loginPasswordContent} />;
 }
