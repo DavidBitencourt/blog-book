@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
@@ -12,6 +12,8 @@ import {
 
 export default function RegisterEmail() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const name = route.params.name;
   const [email, setEmail] = useState("");
 
   const registerEmailContent = (
@@ -33,7 +35,7 @@ export default function RegisterEmail() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("RegisterPassword");
+            navigation.navigate("RegisterPassword", { name, email });
           }}
         />
       </BoxButtonsStyled>

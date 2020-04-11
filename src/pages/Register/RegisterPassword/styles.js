@@ -17,7 +17,7 @@ export const BoxButtonsStyled = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 95%;
+  margin-top: ${({ errorMessage }) => (errorMessage ? 87.7 : 95)}%;
 `;
 
 export const TextStyled = styled.Text`

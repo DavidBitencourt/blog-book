@@ -33,7 +33,7 @@ export default function RegisterName() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("RegisterEmail");
+            navigation.navigate("RegisterEmail", { name });
           }}
         />
       </BoxButtonsStyled>
