@@ -41,6 +41,13 @@ export const PostContentTextStyled = styled.View`
   width: 100%;
 `;
 
+export const BoxActionsStyled = styled.View`
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+  padding-top: 20px;
+`;
+
 export const BoxButtonsStyled = styled.View`
   align-items: center;
   justify-content: center;
@@ -86,5 +93,5 @@ export const TextStyled = styled.Text`
   color: #4f4f4f;
   text-align: left;
   padding-left: 16px;
-  margin-top: 10px;
+  margin-top: ${({ action }) => (action ? 0 : 10)}px;
 `;
