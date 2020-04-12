@@ -6,36 +6,39 @@ export default function InputStyled({
   value,
   handler,
   label,
-  error,
+  errorMessage,
   margin,
   secureTextEntry,
+  multiline,
 }) {
   InputStyled.defaultProps = {
     value: "",
     label: "",
-    error: "",
+    errorMessage: "",
     handler: () => {},
     value: "",
     secureTextEntry: false,
     margin: 0,
+    multiline: false,
   };
 
   InputStyled.propTypes = {
     value: PropTypes.string,
     label: PropTypes.string,
-    error: PropTypes.string,
+    errorMessage: PropTypes.string,
     handler: PropTypes.func,
     value: PropTypes.string,
     secureTextEntry: PropTypes.bool,
     margin: PropTypes.number,
+    multiline: PropTypes.bool,
   };
 
   return (
     <BoxInputStyled style={{ marginTop: margin }}>
       <Input
         placeholderTextColor={"#4F4F4F"}
-        errorStyle={{ color: "red" }}
-        errorMessage={error}
+        errorStyle={{ color: "red", fontSize: 17 }}
+        errorMessage={errorMessage}
         label={label}
         inputStyle={{
           borderBottomWidth: 3,
@@ -49,6 +52,8 @@ export default function InputStyled({
         onChangeText={(text) => {
           handler(text);
         }}
+        multiline={multiline}
+        secureTextEntry={secureTextEntry}
       />
     </BoxInputStyled>
   );

@@ -1,8 +1,7 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Alert, AsyncStorage } from "react-native";
-import { v1 } from "react-native-uuid";
+import { v4 } from "react-native-uuid";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
 import InputStyled from "../../../components/InputStyled";
@@ -28,23 +27,15 @@ export default function RegisterPassword() {
   async function getUsers() {
     getUsersStorage = await AsyncStorage.getItem("users");
     getUsersStorage && setUsersStorage(JSON.parse(getUsersStorage));
-    console.log(JSON.parse(getUsersStorage), "usersStorage");
   }
 
   useEffect(() => {
     getUsers();
   }, []);
 
-  const visibilityPassword = (
-    <MaterialIcons name="visibility" size={32} color="#4F4F4F" />
-  );
-
-  const visibilityOffPassword = (
-    <MaterialIcons name="visibility-off" size={32} color="#4F4F4F" />
-  );
   async function registerUser() {
     if (name && email && password && !errorMessage) {
-      const id = v1();
+      const id = v4();
       let newUser = { id, name, email, password };
       usersStorage.push(newUser);
       await AsyncStorage.setItem("users", JSON.stringify(usersStorage));
