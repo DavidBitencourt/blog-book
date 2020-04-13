@@ -5,7 +5,7 @@ export const BoxButtonsStyled = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 50px;
+  padding-top: 150px;
 `;
 
 export const TextInfoStyled = styled.Text`

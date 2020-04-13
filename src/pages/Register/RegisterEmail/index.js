@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
 import InputStyled from "../../../components/InputStyled";
@@ -15,6 +15,19 @@ export default function RegisterEmail() {
   const route = useRoute();
   const name = route.params.name;
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function checkEmail() {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      navigation.navigate("RegisterPassword", { name, email });
+    } else {
+      setErrorMessage("Digite um e-mail válido.");
+    }
+  }
+
+  useEffect(() => {
+    setErrorMessage("");
+  }, [email]);
 
   const registerEmailContent = (
     <BoxConteinerStyled>
@@ -27,6 +40,7 @@ export default function RegisterEmail() {
           label="email"
           value={email}
           handler={(text) => setEmail(text)}
+          errorMessage={errorMessage}
         />
       </BoxInputStyled>
       <BoxButtonsStyled>
@@ -35,7 +49,7 @@ export default function RegisterEmail() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("RegisterPassword", { name, email });
+            checkEmail();
           }}
         />
       </BoxButtonsStyled>

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
 import InputStyled from "../../../components/InputStyled";
@@ -13,7 +13,11 @@ import {
 export default function RegisterName() {
   const navigation = useNavigation();
   const [name, setName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    setErrorMessage("");
+  }, [name]);
   const registerNameContent = (
     <BoxConteinerStyled>
       <TextStyled>
@@ -25,6 +29,7 @@ export default function RegisterName() {
           label="nome"
           value={name}
           handler={(text) => setName(text)}
+          errorMessage={errorMessage}
         />
       </BoxInputStyled>
       <BoxButtonsStyled>
@@ -33,7 +38,9 @@ export default function RegisterName() {
           textColor="#ffffff"
           backgroundColor="#eb8a75"
           handler={() => {
-            navigation.navigate("RegisterEmail", { name });
+            name
+              ? navigation.navigate("RegisterEmail", { name })
+              : setErrorMessage("Digite o seu nome antes de continuar");
           }}
         />
       </BoxButtonsStyled>

@@ -13,18 +13,17 @@ export default function Container({
   modalChangeStatus,
   data,
   newPost,
-  textPostEdit,
+  postEdit,
 }) {
   const [user, setUser] = useState({});
   Container.defaultProps = {
     modalVisible: false,
     data: {},
-    textPostEdit: "",
+    postEdit: null,
   };
 
   Container.propTypes = {
     modalVisible: PropTypes.bool,
-    textPostEdit: PropTypes.string,
   };
 
   useEffect(() => {
@@ -35,11 +34,11 @@ export default function Container({
     <ContainerMainStyled modalVisible={modalVisible}>
       <BoxContentMainStyled
         modalVisible={modalVisible}
-        style={{ borderTopEndRadius: "50%", borderTopStartRadius: "50%" }}
+        style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}
       >
         <BoxContentStyled
           modalVisible={modalVisible}
-          style={{ borderTopEndRadius: "50%", borderTopStartRadius: "50%" }}
+          style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}
         >
           {container}
           {modalVisible && (
@@ -50,7 +49,7 @@ export default function Container({
               newPost={(post) => newPost(post)}
               modalVisible={modalVisible}
               user={user}
-              textPostEdit={textPostEdit}
+              postEdit={postEdit}
             />
           )}
         </BoxContentStyled>

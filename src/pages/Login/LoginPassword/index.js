@@ -15,6 +15,7 @@ export default function LoginPassword() {
   const navigation = useNavigation();
   const [users, setUsers] = useState([]);
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const route = useRoute();
   const email = route.params.email;
 
@@ -29,6 +30,10 @@ export default function LoginPassword() {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    setErrorMessage("");
+  }, [password]);
+
   async function login() {
     if (users) {
       let user = await users.find((user) => {
@@ -37,8 +42,7 @@ export default function LoginPassword() {
       if (user) {
         navigation.navigate("ListPost", { user });
       } else {
-        Alert.alert("Usuário inválido, verifique os dados e tente novamente.");
-        navigation.navigate("Home");
+        setErrorMessage("usuário inválido, verifique os dados digitados.");
       }
     } else {
       Alert.alert("Para começar, faça o seu cadastro!");
@@ -58,6 +62,7 @@ export default function LoginPassword() {
           value={password}
           handler={(text) => setPassword(text)}
           secureTextEntry
+          errorMessage={errorMessage}
         />
       </BoxInputStyled>
       <BoxButtonsStyled>

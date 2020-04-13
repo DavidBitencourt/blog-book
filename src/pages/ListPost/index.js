@@ -13,10 +13,13 @@ import {
   BoxConteinerStyled,
   BoxHeaderStyled,
   BoxPostStyled,
+  ButtonActionStyled,
   FlatListStyled,
   PostContentStyled,
   PostContentTextStyled,
+  TextActionStyled,
   TextDateStyled,
+  TextExitStyled,
   TextNameStyled,
   TextStyled,
   TitleTextStyled,
@@ -25,12 +28,9 @@ import {
 export default function ListPost() {
   const route = useRoute();
   const user = route.params.user;
-  const [text, setText] = useState(
-    "Galera, gostaria de compartilhar com todos que a campanha lançada em agosto está o maior sucesso! A participação de todos foi fundamental para este sucesso. Hoje teremos uma pesquisa, quem puder participar vai colaborar muito!"
-  );
   const [postList, setPostList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [textPostEdit, setTextPostEdit] = useState("");
+  const [postEdit, setPostEdit] = useState(null);
   const navigation = useNavigation();
 
   async function listPosts() {
@@ -42,7 +42,7 @@ export default function ListPost() {
         idUser: id,
         name: postsFake[index].name,
         date: moment(new Date()).format("LLLL"),
-        text,
+        text: postsFake[index].text,
       };
       array.push(post);
     }
@@ -50,30 +50,31 @@ export default function ListPost() {
   }
 
   function deletePost(postRemove) {
-    let index = postList.findIndex((index) => {
-      return index.id === postRemove.id;
-    });
-    setPostList(postList.slice(index + 1));
+    setPostList(postList.filter((item) => item.id !== postRemove.id));
   }
+
+  async function changeListPost(dataPost) {
+    let index = await postList.findIndex((item) => {
+      return item.id === dataPost.id;
+    });
+    if (index !== -1) {
+      setPostList([
+        (postList[index].text = dataPost.text),
+        (postList[index].date = moment(new Date()).format("LLLL")),
+        ...postList,
+      ]);
+    } else {
+      setPostList([dataPost, ...postList]);
+    }
+  }
+
+  useEffect(() => {
+    if (!modalVisible) setPostEdit(null);
+  }, [modalVisible]);
 
   useEffect(() => {
     listPosts();
   }, []);
-
-  useEffect(() => {
-    console.log(postList, "postList");
-
-    // if (postList) {
-    //   setPostList(
-    //     postList.sort((a, b) => {
-    //       return (
-    //         moment(new Date(b.date)).format("YYYY-MM-DD") -
-    //         moment(new Date(a.date)).format("YYYY-MM-DD")
-    //       );
-    //     })
-    //   );
-    // }
-  }, [postList]);
 
   const listPostContent = (
     <BoxConteinerStyled>
@@ -89,8 +90,8 @@ export default function ListPost() {
             navigation.navigate("Home");
           }}
         >
-          <TextStyled action>Sair</TextStyled>
-          <MaterialIcons name="exit-to-app" size={25} color="#4f4f4f" />
+          <TextExitStyled action>Sair</TextExitStyled>
+          <MaterialIcons name="exit-to-app" size={22} color="#eb8a75" />
         </TouchableOpacity>
       </BoxHeaderStyled>
       <BoxPostStyled>
@@ -99,48 +100,48 @@ export default function ListPost() {
           keyExtractor={(post) => post.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: post }) => (
-            <PostContentStyled>
-              <TextDateStyled>{post.date}</TextDateStyled>
-              <PostContentTextStyled
-                style={{ borderLeftWidth: 3, borderLeftColor: "#BE7667" }}
-              >
-                <TextNameStyled>{post.name}</TextNameStyled>
-                <TextStyled>{post.text}</TextStyled>
-                {/* {post.idUser === user.id && ( */}
-                <BoxActionsStyled>
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                      paddingTop: 10,
-                    }}
-                    onPress={() => {
-                      deletePost(post);
-                    }}
+            <>
+              {post.id && (
+                <PostContentStyled>
+                  <TextDateStyled>{post.date}</TextDateStyled>
+                  <PostContentTextStyled
+                    style={{ borderLeftWidth: 3, borderLeftColor: "#BE7667" }}
                   >
-                    <TextStyled action>excluir</TextStyled>
-                    <MaterialIcons name="delete" size={23} color="#4f4f4f" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                      paddingTop: 10,
-                    }}
-                    onPress={() => {
-                      setTextPostEdit(post.text);
-                      setModalVisible(true);
-                    }}
-                  >
-                    <TextStyled action>editar</TextStyled>
-                    <MaterialIcons name="edit" size={23} color="#4f4f4f" />
-                  </TouchableOpacity>
-                </BoxActionsStyled>
-                {/* // )} */}
-              </PostContentTextStyled>
-            </PostContentStyled>
+                    <TextNameStyled>{post.name}</TextNameStyled>
+                    <TextStyled>{post.text}</TextStyled>
+                    {post.idUser === user.id && (
+                      <BoxActionsStyled>
+                        <ButtonActionStyled
+                          onPress={() => {
+                            deletePost(post);
+                          }}
+                        >
+                          <TextActionStyled action>excluir</TextActionStyled>
+                          <MaterialIcons
+                            name="delete"
+                            size={18}
+                            color="#ffffff"
+                          />
+                        </ButtonActionStyled>
+                        <ButtonActionStyled
+                          onPress={() => {
+                            setPostEdit({ ...post });
+                            setModalVisible(true);
+                          }}
+                        >
+                          <TextActionStyled action>editar</TextActionStyled>
+                          <MaterialIcons
+                            name="edit"
+                            size={18}
+                            color="#ffffff"
+                          />
+                        </ButtonActionStyled>
+                      </BoxActionsStyled>
+                    )}
+                  </PostContentTextStyled>
+                </PostContentStyled>
+              )}
+            </>
           )}
         />
       </BoxPostStyled>
@@ -164,9 +165,9 @@ export default function ListPost() {
       modalVisible={modalVisible}
       modalChangeStatus={(status) => setModalVisible(status)}
       newPost={(newPost) => {
-        setPostList([newPost, ...postList]);
+        changeListPost(newPost);
       }}
-      textPostEdit={textPostEdit}
+      postEdit={postEdit}
     />
   );
 }

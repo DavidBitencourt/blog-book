@@ -10,35 +10,35 @@ const ModalStyled = ({
   modalChangeStatus,
   newPost,
   user,
-  textPostEdit,
+  postEdit,
 }) => {
   ModalStyled.defaultProps = {
     modalVisible: false,
     modalChangeStatus: () => {},
     newPost: () => {},
-    textPostEdit: "",
+    postEdit: null,
   };
 
   ModalStyled.propTypes = {
     modalVisible: PropTypes.bool,
     modalChangeStatus: PropTypes.func,
     newPost: PropTypes.func,
-    textPostEdit: PropTypes.string,
+    postEdit: PropTypes.object,
   };
 
   const [textPost, setTextPost] = useState("");
 
   useEffect(() => {
-    if (textPostEdit) setTextPost(textPostEdit);
-  }, [textPostEdit]);
+    postEdit && setTextPost(postEdit.text);
+  }, [postEdit]);
 
   async function registerPost() {
     if (textPost) {
       let id = v4();
       await newPost({
-        id,
-        idUser: user.id,
-        name: user.name,
+        id: postEdit ? postEdit.id : id,
+        idUser: postEdit ? postEdit.idUser : user.id,
+        name: postEdit ? postEdit.name : user.name,
         date: moment(new Date()).format("LLLL"),
         text: textPost,
       });
@@ -56,7 +56,7 @@ const ModalStyled = ({
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          modalChangeStatus(false);
         }}
       >
         <View style={styles.centeredView}>
@@ -70,7 +70,7 @@ const ModalStyled = ({
               style={{
                 width: "80%",
                 padding: 25,
-                height: "50%",
+                height: 200,
                 borderRadius: 10,
                 borderWidth: 1,
                 fontWeight: "normal",
@@ -94,7 +94,7 @@ const ModalStyled = ({
                 width={37}
               />
               <Button
-                text="publicar"
+                text={postEdit ? "editar" : "publicar"}
                 textColor="#ffffff"
                 backgroundColor="#eb8a75"
                 handler={() => {
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 400,
+    paddingTop: 120,
   },
   modalView: {
     width: "100%",

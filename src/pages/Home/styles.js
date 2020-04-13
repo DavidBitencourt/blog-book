@@ -15,10 +15,10 @@ export const BoxButtonsStyled = styled.View`
 export const TextStyled = styled.Text`
   align-items: center;
   justify-content: center;
-  width: 80%;
+  width: 90%;
   font-weight: 300;
   font-size: 23px;
-  line-height: 23px;
+  line-height: 30px;
   color: #eb8a75;
   text-align: center;
   margin-top: 50px;

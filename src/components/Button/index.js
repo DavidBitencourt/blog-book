@@ -9,7 +9,6 @@ export default function Button({
   handler,
   disabled,
   width,
-  icon,
 }) {
   Button.defaultProps = {
     text: "",

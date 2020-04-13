@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, AsyncStorage } from "react-native";
+import { AsyncStorage } from "react-native";
 import { v4 } from "react-native-uuid";
 import Button from "../../../components/Button";
 import Container from "../../../components/Container";
@@ -20,7 +20,6 @@ export default function RegisterPassword() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [disabled, setDisabled] = useState(false);
   const [usersStorage, setUsersStorage] = useState([]);
   let getUsersStorage;
 
@@ -35,16 +34,15 @@ export default function RegisterPassword() {
 
   async function registerUser() {
     if (name && email && password && !errorMessage) {
+      if (password.length <= 5)
+        return setErrorMessage("digite uma senha com pelo menos 6 caracteres");
       const id = v4();
       let newUser = { id, name, email, password };
       usersStorage.push(newUser);
       await AsyncStorage.setItem("users", JSON.stringify(usersStorage));
       navigation.navigate("EndRegistration");
     } else {
-      await Alert.alert(
-        "Erro ao cadastrar, verifique os dados e tente novamente."
-      );
-      navigation.navigate("Home");
+      setErrorMessage("verifique e confirme as senhas para finalizar");
     }
   }
 
@@ -53,11 +51,9 @@ export default function RegisterPassword() {
       if (password !== confirmPassword) {
         setErrorMessage("senha diferente da anterior");
       } else {
-        setDisabled(false);
         setErrorMessage("");
       }
     } else {
-      setDisabled(false);
       setErrorMessage("");
     }
   }, [password, confirmPassword]);
@@ -67,7 +63,7 @@ export default function RegisterPassword() {
       <TextStyled>
         Para finalizar, crie e confirme{" "}
         <TextStyled style={{ fontWeight: "bold" }}>
-          sua senha de 6 dígitos
+          sua senha de no mínimo 6 dígitos
         </TextStyled>
       </TextStyled>
       <BoxInputStyled>
@@ -76,7 +72,6 @@ export default function RegisterPassword() {
           value={password}
           handler={(text) => setPassword(text)}
           secureTextEntry
-          //   icon={visibilityPassword}
         />
         <InputStyled
           label="confirme a senha"
@@ -84,7 +79,6 @@ export default function RegisterPassword() {
           handler={(text) => setConfirmPassword(text)}
           margin={40}
           secureTextEntry
-          //   icon={visibilityOffPassword}
           errorMessage={errorMessage}
         />
       </BoxInputStyled>
@@ -96,7 +90,6 @@ export default function RegisterPassword() {
           handler={() => {
             registerUser();
           }}
-          disabled={disabled}
         />
       </BoxButtonsStyled>
     </BoxConteinerStyled>

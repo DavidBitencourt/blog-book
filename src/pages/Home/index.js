@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import logo from "../../assets/image/logo.png";
+import logo1 from "../../assets/image/logo1.png";
 import Button from "../../components/Button";
 import Container from "../../components/Container";
 import { BoxButtonsStyled, LogoStyled, TextStyled } from "./styles";
@@ -10,7 +10,7 @@ export default function Home() {
 
   const homeContent = (
     <>
-      <LogoStyled source={logo} />
+      <LogoStyled source={logo1} />
       <TextStyled>
         Este é o nosso blog, para compartilhar ideias e curiosidades
       </TextStyled>

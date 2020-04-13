@@ -8,8 +8,9 @@ export const BoxConteinerStyled = styled.View`
 
 export const BoxInputStyled = styled.View`
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
+  height: 60%;
   margin-top: 37px;
 `;
 
@@ -17,7 +18,7 @@ export const BoxButtonsStyled = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: ${({ errorMessage }) => (errorMessage ? 87.7 : 95)}%;
+  /* margin-top: ${({ errorMessage }) => (errorMessage ? 87.7 : 95)}%; */
 `;
 
 export const TextStyled = styled.Text`

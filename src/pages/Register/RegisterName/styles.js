@@ -8,17 +8,16 @@ export const BoxConteinerStyled = styled.View`
 
 export const BoxInputStyled = styled.View`
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
+  height: 65%;
   margin-top: 37px;
 `;
 
 export const BoxButtonsStyled = styled.View`
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   width: 100%;
-  margin-top: 100%;
-  padding-top: 30%;
 `;
 
 export const TextStyled = styled.Text`
